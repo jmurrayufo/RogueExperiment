@@ -9,6 +9,7 @@ class App():
    def __init__( s ):
       s.Running = True
       s.Logging = logging.getLogger( '' )
+      s.Logging.info("App initilized")
 
    def Run( s ):
       while s.Running:
@@ -17,9 +18,6 @@ class App():
 
    def Main( s ):
       s.Running = False
-
-
-      
 
 if __name__ == '__main__':
    
@@ -42,7 +40,7 @@ if __name__ == '__main__':
    ch.setLevel(logging.ERROR)
    
    # create formatter and add it to the handlers
-   formatter = logging.Formatter('%(asctime)s - %(module)s:%(lineno)d:%(name)s - %(levelname)s - %(message)s')
+   formatter = logging.Formatter('%(asctime)s - %(module)s:%(lineno)d:%(funcName)s() - %(levelname)s - %(message)s')
    fh.setFormatter(formatter)
    #ch.setFormatter(formatter)
    
@@ -50,7 +48,9 @@ if __name__ == '__main__':
    logger.addHandler(fh)
    logger.addHandler(ch)
 
-   logger.info('test')
+   logger.info('')
+   logger.info('')
+   logger.info('')
 
    x = App()
    x.Run()
