@@ -1,26 +1,63 @@
 #!/usr/bin/env python
 
+import atexit
 import curses
-import os
-import logging
 import datetime
+import logging
+import menu
+import os
 
 class App():
    def __init__( s ):
       s.Running = True
-      s.Logging = logging.getLogger( '' )
-      s.Logging.info("App initilized")
+      s.Logger= logging.getLogger( '' )
+      s.Logger.info("App initilized")
+      s.State = 'Main Menu'
+      s.Scr = None
+
 
    def Run( s ):
+      s.Logger.info("Run Application")
+      s.Scr = curses.initscr()
       while s.Running:
          s.Main()
-      s.Logging.info("Terminate Application")
+      s.Logger.info("Terminate Application")
 
    def Main( s ):
-      s.Running = False
+      if s.State == 'Main Menu':
+         m = menu.Menu(
+            (3,3,50,50),
+            ( ('1',One), ('2',Two))
+         )
+         tmp = m.Run()
+         if tmp != None:
+            tmp()
+         else:
+            s.State = 'Exit'
+      else:
+         s.Logger.debug("Exit due to no valid state")
+         s.Running = False
+
+
+def One():
+   logger = logging.getLogger( '' )
+   logger.debug("One")
+
+def Two():
+   logger = logging.getLogger( '' )
+   logger.debug("Two")
+
+def OneMoreThing():
+   logger = logging.getLogger( '' )
+   logger.info( "Run atexit callback function" )
+   curses.endwin()
+   logger.info( "Exit Program" )
+
 
 if __name__ == '__main__':
    
+   atexit.register( OneMoreThing )
+
    scriptPath = os.path.dirname( os.path.realpath(__file__) ) + "/"
 
    # create logger with 'spam_application'
