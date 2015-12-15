@@ -22,7 +22,10 @@ class Menu():
       s.ScreenPos = screenPos
       s.Window = curses.newwin( screenPos[2], screenPos[3], screenPos[0], screenPos[1] )
       s.Window.nodelay(1)
-#      s.Window.raw()
+
+      # s.Window.raw()
+      # We must keep a copy of this instance, as its job is to keep state of the keyboard at times
+      s.KeyReader = keypress.KeyDetect() 
 
    # Display the menu and its selection
    def Display( s ):
@@ -30,7 +33,12 @@ class Menu():
       s.Window.border()
       xOffset = 2
       for i in s.Options:
-         s.Window.addstr( xOffset, 2, i[0] )
+         if s.Cursor + 2 == xOffset:
+            attr = curses.A_STANDOUT
+         else:
+            attr = curses.A_NORMAL
+
+         s.Window.addstr( xOffset, 2, i[0], attr )
          xOffset += 1
       curses.doupdate()
       s.Logger.info("Fin")
@@ -42,7 +50,7 @@ class Menu():
          s.Display()
          # Get a key press
          s.Logger.info("Call CheckForKey()")
-         key = keypress.KeyDetect().CheckForKey( s.Window, (0,0) )
+         key = s.KeyReader.CheckForKey( s.Window )
          s.Logger.info("Got back from CheckForKey()")
          s.Logger.debug( "Key was: {}".format(key))
          s.Logger.debug( "Cursor is: {}".format(s.Cursor))

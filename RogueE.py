@@ -19,6 +19,7 @@ class App():
    def Run( s ):
       s.Logger.info("Run Application")
       s.Scr = curses.initscr()
+      curses.noecho()
       while s.Running:
          s.Main()
       s.Logger.info("Terminate Application")
